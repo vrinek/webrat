@@ -7,13 +7,27 @@ module Webrat
       # ==== Returns
       # String:: The failure message.
       def failure_message
-        "expected following output to contain a #{tag_inspect} tag:\n#{@document}"
+        msg = ["Expected following output to contain"]
+
+        msg << case count = @options[:count] || 1
+        when 0
+          "no"
+        when 1
+          "a"
+        else
+          count.to_s
+        end
+
+        msg << tag_inspect
+        msg << "tag#{'s' unless count == 1}:\n#{@document}"
+
+        return msg * ' '
       end
 
       # ==== Returns
       # String:: The failure message to be displayed in negative matches.
       def negative_failure_message
-        "expected following output to omit a #{tag_inspect}:\n#{@document}"
+        "Expected following output to omit a #{tag_inspect}:\n#{@document}"
       end
 
       def tag_inspect
